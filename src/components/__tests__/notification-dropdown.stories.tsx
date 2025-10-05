@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { NotificationDropdown } from '../notification-dropdown';
 
 const meta: Meta<typeof NotificationDropdown> = {
