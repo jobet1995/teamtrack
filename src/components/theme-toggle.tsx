@@ -36,3 +36,6 @@ export function ThemeToggle() {
     </DropdownMenu>
   );
 }
+
+// Default export for Storybook compatibility
+export default ThemeToggle;
