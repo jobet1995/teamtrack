@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { userEvent, within } from '@storybook/test';
 import { UserMenu } from '../user-menu';
 
 const meta: Meta<typeof UserMenu> = {
@@ -14,3 +15,17 @@ export default meta;
 type Story = StoryObj<typeof UserMenu>;
 
 export const Default: Story = {};
+
+export const Interactive: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Open the dropdown
+    await userEvent.click(canvas.getByRole('button'));
+
+    // Click on the different menu items
+    await userEvent.click(canvas.getByText('Profile'));
+    await userEvent.click(canvas.getByText('Settings'));
+    await userEvent.click(canvas.getByText('Logout'));
+  },
+};

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { userEvent, within } from '@storybook/test';
 import { ThemeProvider } from 'next-themes';
 import { ThemeToggle } from '../theme-toggle';
 
@@ -110,5 +111,15 @@ export const Interactive: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Open the dropdown
+    await userEvent.click(canvas.getByRole('button'));
+
+    // Click on the different theme options
+    await userEvent.click(canvas.getByText('Light'));
+    await userEvent.click(canvas.getByText('Dark'));
+    await userEvent.click(canvas.getByText('System'));
+  },
 };
-  

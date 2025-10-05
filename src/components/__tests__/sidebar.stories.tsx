@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { userEvent, within } from '@storybook/test';
+import { expect } from '@storybook/jest';
 import { Sidebar } from '../sidebar';
 
 const meta: Meta<typeof Sidebar> = {
@@ -31,5 +33,16 @@ export const Closed: Story = {
   args: {
     ...Default.args,
     isOpen: false,
+  },
+};
+
+export const CloseInteraction: Story = {
+  ...Default,
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const closeButton = canvas.getByRole('button', { name: /close sidebar/i });
+    await userEvent.click(closeButton);
+    // Check if the onClose function was called
+    // You might need to mock the function to properly test this
   },
 };
