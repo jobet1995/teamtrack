@@ -15,6 +15,6 @@ type Story = StoryObj<typeof AppLayout>;
 
 export const Default: Story = {
   args: {
-    children: <div className="p-4">This is the main content area.</div>,
+    children: <div className='p-4'>This is the main content area.</div>,
   },
 };
