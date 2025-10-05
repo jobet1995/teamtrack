@@ -50,7 +50,7 @@ export function Testimonials() {
                 </div>
 
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                  "{testimonial.content}"
+                  {testimonial.content}
                 </p>
 
                 <div className="flex items-center gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
