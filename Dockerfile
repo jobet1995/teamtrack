@@ -11,7 +11,7 @@ COPY package*.json ./
 FROM base AS builder
 
 # Install all dependencies
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 # Copy the rest of the source code
 COPY . .
@@ -23,7 +23,7 @@ RUN npm run build
 FROM base AS production
 
 # Install only production dependencies
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --ignore-scripts
 
 # Copy the built Next.js app from the builder stage
 COPY --from=builder /app/.next ./.next
