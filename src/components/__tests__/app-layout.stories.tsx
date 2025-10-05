@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { AppLayout } from '../app-layout';
+import { AppLayout } from '../layout/app-layout';
 
 const meta: Meta<typeof AppLayout> = {
   title: 'components/AppLayout',

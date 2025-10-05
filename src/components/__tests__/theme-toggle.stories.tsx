@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { ThemeProvider } from 'next-themes';
-import { ThemeToggle } from '../theme-toggle';
+import { ThemeToggle } from '../layout/theme-toggle';
 
 // Wrapper component to provide theme context for stories
 const ThemeWrapper = ({ children }: { children: React.ReactNode }) => (
