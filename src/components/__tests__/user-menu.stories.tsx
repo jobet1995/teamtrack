@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { userEvent, within } from '@storybook/test';
+import { userEvent, within } from '@storybook/testing-library';
 import { UserMenu } from '../user-menu';
 
 const meta: Meta<typeof UserMenu> = {

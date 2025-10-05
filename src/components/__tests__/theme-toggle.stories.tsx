@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { userEvent, within } from '@storybook/test';
+import { userEvent, within } from '@storybook/testing-library';
 import { ThemeProvider } from 'next-themes';
 import { ThemeToggle } from '../theme-toggle';
 
