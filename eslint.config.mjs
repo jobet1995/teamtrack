@@ -20,6 +20,12 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  {
+    files: ["cypress/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-namespace": "off",
+    },
+  },
 ];
 
 export default eslintConfig;
