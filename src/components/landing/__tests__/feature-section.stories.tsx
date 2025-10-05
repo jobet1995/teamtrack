@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { FeaturesSection } from '../feature-section';
+import { FeatureSection } from '../feature-section';
 
-const meta: Meta<typeof FeaturesSection> = {
-  title: 'components/landing/FeaturesSection',
-  component: FeaturesSection,
+const meta: Meta<typeof FeatureSection> = {
+  title: 'components/landing/FeatureSection',
+  component: FeatureSection,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
@@ -11,7 +11,7 @@ const meta: Meta<typeof FeaturesSection> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof FeaturesSection>;
+type Story = StoryObj<typeof FeatureSection>;
 
 export const Default: Story = {
   args: {},
