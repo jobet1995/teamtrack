@@ -35,7 +35,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prisma
-    command: ["npx", "prisma", "studio"]
+    command: >
+      sh -c "sed '/engineType/d' prisma/schema.prisma > /tmp/schema.prisma &&
+             npx prisma studio --schema /tmp/schema.prisma"
     depends_on:
       - db
     env_file:
