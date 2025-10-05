@@ -1,9 +1,155 @@
 generator client {
-  provider = "prisma-client-js"
-  engineType = "accelerate"
+  provider     = "prisma-client-js"
+  engineType   = "accelerate"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "foreignKeys"
+}
+
+// ENUMS
+enum Role {
+  USER
+  ADMIN
+  PROJECT_MANAGER
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  COMMENT_ADDED
+  PROJECT_INVITE
+  STATUS_UPDATED
+}
+
+// MODELS
+model User {
+  id            Int          @id @default(autoincrement())
+  email         String       @unique
+  name          String?
+  password      String // In a real app, this should be a hash
+  role          Role         @default(USER)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  projects      UsersOnProjects[]
+  ownedProjects Project[]      @relation("ProjectOwner")
+  assignedTasks Task[]         @relation("AssignedTasks")
+  comments      Comment[]
+  notifications Notification[]
+  attachments   Attachment[]   @relation("UploadedBy")
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  dueDate     DateTime?
+
+  owner   User @relation("ProjectOwner", fields: [ownerId], references: [id])
+  ownerId Int
+
+  members UsersOnProjects[]
+  tasks   Task[]
+}
+
+model UsersOnProjects {
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId Int
+  assignedAt DateTime @default(now())
+
+  @@id([userId, projectId])
+}
+
+model Task {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  status      TaskStatus   @default(PENDING)
+  priority    TaskPriority @default(MEDIUM)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  dueDate     DateTime?
+
+  project     Project      @relation(fields: [projectId], references: [id])
+  projectId   Int
+  assignee    User?        @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  assigneeId  Int?
+  comments    Comment[]
+  attachments Attachment[]
+  tags        TasksOnTags[]
+}
+
+model Tag {
+  id    Int           @id @default(autoincrement())
+  name  String        @unique
+  color String?
+  tasks TasksOnTags[]
+}
+
+model TasksOnTags {
+  task   Task @relation(fields: [taskId], references: [id])
+  taskId Int
+  tag    Tag  @relation(fields: [tagId], references: [id])
+  tagId  Int
+
+  @@id([taskId, tagId])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  task        Task         @relation(fields: [taskId], references: [id])
+  taskId      Int
+  author      User         @relation(fields: [authorId], references: [id])
+  authorId    Int
+  attachments Attachment[]
+}
+
+model Attachment {
+  id        Int      @id @default(autoincrement())
+  fileName  String
+  url       String
+  createdAt DateTime @default(now())
+
+  task      Task?    @relation(fields: [taskId], references: [id])
+  taskId    Int?
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId Int?
+
+  uploadedBy   User @relation("UploadedBy", fields: [uploadedById], references: [id])
+  uploadedById Int
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  type      NotificationType
+  message   String
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
 }
