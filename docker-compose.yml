@@ -31,5 +31,17 @@ services:
     env_file:
       - .env
 
+  prisma-studio:
+    build:
+      context: .
+      dockerfile: Dockerfile.prisma
+    command: ["npx", "prisma", "studio"]
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "5555:5555"
+
 volumes:
   db_data:
