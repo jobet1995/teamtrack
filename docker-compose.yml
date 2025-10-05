@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  nextjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/projectdb
+      - NEXTAUTH_SECRET=some-random-secret
+      - NEXTAUTH_URL=http://localhost:3000
+    ports:
+      - "3000:3000"
+    restart: always
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=projectdb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  prisma-migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.prisma
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/projectdb
+
+volumes:
+  db_data:
