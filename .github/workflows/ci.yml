@@ -97,37 +97,9 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/project-management-app:latest
             ${{ secrets.DOCKER_USERNAME }}/project-management-app:${{ github.sha }}
 
-  migrate_staging_test:
-    runs-on: ubuntu-latest
-    needs: build_and_push_docker
-    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('''**/package-lock.json''') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Install dependencies
-        run: npm ci
-      - name: Run Prisma migrations
-        run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.STAGING_TEST_DATABASE_URL }}
-      - name: Rollback migrations on failure
-        if: failure()
-        run: npx prisma migrate reset --force
-        env:
-          DATABASE_URL: ${{ secrets.STAGING_TEST_DATABASE_URL }}
-
   deploy_staging_test:
     runs-on: ubuntu-latest
-    needs: migrate_staging_test
+    needs: build_and_push_docker
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     steps:
       - name: Deploy to staging-test server
@@ -140,37 +112,9 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/project-management-app:latest
             docker-compose up -d --no-deps nextjs-app
 
-  migrate_staging:
-    runs-on: ubuntu-latest
-    needs: build_and_push_docker
-    if: github.ref == 'refs/heads/stagingTest' && github.event_name == 'push'
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('''**/package-lock.json''') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Install dependencies
-        run: npm ci
-      - name: Run Prisma migrations
-        run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
-      - name: Rollback migrations on failure
-        if: failure()
-        run: npx prisma migrate reset --force
-        env:
-          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
-
   deploy_staging:
     runs-on: ubuntu-latest
-    needs: migrate_staging
+    needs: build_and_push_docker
     if: github.ref == 'refs/heads/stagingTest' && github.event_name == 'push'
     steps:
       - name: Deploy to staging server
@@ -183,37 +127,9 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/project-management-app:latest
             docker-compose up -d --no-deps nextjs-app
 
-  migrate_release:
-    runs-on: ubuntu-latest
-    needs: build_and_push_docker
-    if: github.ref == 'refs/heads/releaseTest' && github.event_name == 'push'
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('''**/package-lock.json''') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Install dependencies
-        run: npm ci
-      - name: Run Prisma migrations
-        run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.RELEASE_DATABASE_URL }}
-      - name: Rollback migrations on failure
-        if: failure()
-        run: npx prisma migrate reset --force
-        env:
-          DATABASE_URL: ${{ secrets.RELEASE_DATABASE_URL }}
-
   deploy_release:
     runs-on: ubuntu-latest
-    needs: migrate_release
+    needs: build_and_push_docker
     if: github.ref == 'refs/heads/releaseTest' && github.event_name == 'push'
     steps:
       - name: Deploy to release server
@@ -226,37 +142,9 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/project-management-app:latest
             docker-compose up -d --no-deps nextjs-app
 
-  migrate_master:
-    runs-on: ubuntu-latest
-    needs: build_and_push_docker
-    if: github.ref == 'refs/heads/release' && github.event_name == 'push'
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('''**/package-lock.json''') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Install dependencies
-        run: npm ci
-      - name: Run Prisma migrations
-        run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.MASTER_DATABASE_URL }}
-      - name: Rollback migrations on failure
-        if: failure()
-        run: npx prisma migrate reset --force
-        env:
-          DATABASE_URL: ${{ secrets.MASTER_DATABASE_URL }}
-
   deploy_master:
     runs-on: ubuntu-latest
-    needs: migrate_master
+    needs: build_and_push_docker
     if: github.ref == 'refs/heads/release' && github.event_name == 'push'
     steps:
       - name: Deploy to master server
