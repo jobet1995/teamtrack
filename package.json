@@ -71,6 +71,7 @@
     "@storybook/addon-onboarding": "^9.1.10",
     "@storybook/addon-vitest": "^9.1.10",
     "@storybook/nextjs-vite": "^9.1.10",
+    "@storybook/testing-library": "^0.2.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

@@ -37,11 +37,10 @@ export const Closed: Story = {
 
 export const CloseInteraction: Story = {
   ...Default,
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    // Find the close button by its accessible name
     const closeButton = canvas.getByRole('button', { name: /close sidebar/i });
     await userEvent.click(closeButton);
-    // Check if the onClose function was called
-    // You might need to mock the function to properly test this
   },
 };
