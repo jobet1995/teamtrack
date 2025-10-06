@@ -20,6 +20,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
           size="icon"
           className="lg:hidden"
           onClick={onMenuClick}
+          aria-label="Open navigation menu"
         >
           <Menu className="h-5 w-5" />
         </Button>
@@ -42,7 +43,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="sm:hidden">
+          <Button variant="ghost" size="icon" className="sm:hidden" aria-label="Search">
             <Search className="h-5 w-5" />
           </Button>
 
